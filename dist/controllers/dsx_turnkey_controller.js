@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refineNonNull = refineNonNull;
 exports.dsx_turnkey_controller = dsx_turnkey_controller;
-exports.dsx_turnkey_test = dsx_turnkey_test;
 const sdk_server_1 = require("@turnkey/sdk-server");
 function refineNonNull(input, errorMessage) {
     if (input == null) {
@@ -60,9 +59,4 @@ async function dsx_turnkey_controller(req, res) {
             message: "Something went wrong.",
         });
     }
-}
-async function dsx_turnkey_test(req, res) {
-    res.status(200).json({
-        message: "goood",
-    });
 }
