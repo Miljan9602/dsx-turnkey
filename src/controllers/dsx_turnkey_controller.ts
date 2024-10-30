@@ -69,14 +69,15 @@ export async function dsx_turnkey_controller(
         const wallet = refineNonNull(createSubOrgResponse.wallet);
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
-        res.status(200).json({
+
+        return res.status(200).json({
             id: walletId,
             address: walletAddress,
             subOrgId: subOrgId,
         });
     } catch (e) {
         console.error(e);
-        res.status(500).json({
+        return res.status(500).json({
             message: "Something went wrong.",
         });
     }
