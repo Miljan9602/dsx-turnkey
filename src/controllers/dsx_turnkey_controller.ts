@@ -81,3 +81,12 @@ export async function dsx_turnkey_controller(
         });
     }
 }
+
+export async function dsx_turnkey_test(
+    req: Request,
+    res: Response
+) {
+    res.status(200).json({
+        message: "goood",
+    });
+}
