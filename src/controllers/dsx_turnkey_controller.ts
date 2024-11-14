@@ -1,5 +1,18 @@
 import {Request, Response} from "express";
 import { Turnkey, TurnkeyApiTypes } from "@turnkey/sdk-server";
+import {config} from "dotenv";
+
+config()
+const redis = require('redis');
+
+const client = redis.createClient({
+    url: process.env.REDIS_URL
+});
+
+(async () => {
+    // Connect to redis server
+    await client.connect();
+})();
 
 export type TWalletDetails = {
     id: string;
@@ -24,10 +37,13 @@ type CreateSubOrgWithWalletRequest = {
     subOrgName: string;
     challenge: string;
     attestation: TAttestation;
+    backup_address: string|null
 };
+
 type ErrorMessage = {
     message: string;
 };
+
 export async function dsx_turnkey_controller(
     req: Request,
     res: Response
@@ -70,10 +86,32 @@ export async function dsx_turnkey_controller(
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
 
+        if (createSubOrgRequest.backup_address) {
+            await client.set(subOrgId, createSubOrgRequest.backup_address);
+        }
+
         return res.status(200).json({
             id: walletId,
             address: walletAddress,
             subOrgId: subOrgId,
+        });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Something went wrong.",
+        });
+    }
+}
+
+export async function dsx_turnkey_get_backup_address(
+    req: Request,
+    res: Response
+) {
+    try {
+        let subOrgId = req.params['suborg_id']
+
+        return res.status(200).json({
+            backup_address: await client.get(subOrgId),
         });
     } catch (e) {
         console.error(e);

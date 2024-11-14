@@ -10,4 +10,5 @@ const express_1 = __importDefault(require("express"));
 const dsx_turnkey_router = express_1.default.Router();
 exports.dsx_turnkey_router = dsx_turnkey_router;
 dsx_turnkey_router.post("/suborg", dsx_turnkey_controller_1.dsx_turnkey_controller);
+dsx_turnkey_router.get("/suborg/:suborg_id/backup-address", dsx_turnkey_controller_1.dsx_turnkey_get_backup_address);
 dsx_turnkey_router.post("/proxy", dsx_turnkey_proxy_controller_1.turnkeyProxyHandler);
