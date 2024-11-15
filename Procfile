@@ -1,1 +1,1 @@
-web: yarn web
+web: forever dist
