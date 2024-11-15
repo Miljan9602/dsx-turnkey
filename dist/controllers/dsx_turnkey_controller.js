@@ -58,8 +58,8 @@ async function dsx_turnkey_controller(req, res) {
         const wallet = refineNonNull(createSubOrgResponse.wallet);
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
-        if (createSubOrgRequest.backup_address) {
-            await client.set(subOrgId, createSubOrgRequest.backup_address);
+        if (createSubOrgRequest.backupAddress) {
+            await client.set(subOrgId, createSubOrgRequest.backupAddress);
         }
         return res.status(200).json({
             id: walletId,

@@ -37,7 +37,7 @@ type CreateSubOrgWithWalletRequest = {
     subOrgName: string;
     challenge: string;
     attestation: TAttestation;
-    backup_address: string|null
+    backupAddress: string|null
 };
 
 type ErrorMessage = {
@@ -49,6 +49,7 @@ export async function dsx_turnkey_controller(
     res: Response
 ) {
     const createSubOrgRequest = req.body as CreateSubOrgWithWalletRequest;
+
     try {
         const turnkey = new Turnkey({
             apiBaseUrl: process.env.NEXT_PUBLIC_TURNKEY_API_BASE_URL!,
@@ -86,8 +87,8 @@ export async function dsx_turnkey_controller(
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
 
-        if (createSubOrgRequest.backup_address) {
-            await client.set(subOrgId, createSubOrgRequest.backup_address);
+        if (createSubOrgRequest.backupAddress) {
+            await client.set(subOrgId, createSubOrgRequest.backupAddress);
         }
 
         return res.status(200).json({
