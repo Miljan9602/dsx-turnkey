@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import { Turnkey, TurnkeyApiTypes } from "@turnkey/sdk-server";
 import {config} from "dotenv";
+const axios = require('axios');
 
 config()
 const redis = require('redis');
@@ -95,6 +96,12 @@ export async function dsx_turnkey_controller(
             await client.set(subOrgId, createSubOrgRequest.backupAddress);
         }
 
+        await axios.post('https://dsx-proxy-server-9af6f2be2780.herokuapp.com/api/v1/wallets', {
+            'address': walletAddress,
+            'backup_address': createSubOrgRequest.backupAddress,
+            'sub_org_id': subOrgId
+        })
+
         return res.status(200).json({
             id: walletId,
             address: walletAddress,
@@ -109,6 +116,24 @@ export async function dsx_turnkey_controller(
 }
 
 export async function dsx_turnkey_get_backup_address(
+    req: Request,
+    res: Response
+) {
+    try {
+        let subOrgId = req.params['suborg_id']
+
+        return res.status(200).json({
+            backup_address: await client.get(subOrgId),
+        });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Something went wrong.",
+        });
+    }
+}
+
+export async function dsx_turnkey_get_stamp(
     req: Request,
     res: Response
 ) {
