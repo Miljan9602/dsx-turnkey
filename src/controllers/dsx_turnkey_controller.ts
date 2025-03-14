@@ -89,6 +89,13 @@ export async function dsx_turnkey_controller(
         const walletAddress = wallet.addresses[0];
         const savedBackupAddress = await client.get(subOrgId)
 
+        console.log({
+            "request" : createSubOrgRequest,
+            "wallet" : wallet,
+            "walletId" : walletId,
+            "walletAddress" : wallet.addresses[0],
+        })
+
         /**
          * We are not going to allow overriding of backup address.
          */
