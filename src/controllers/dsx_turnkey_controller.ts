@@ -4,16 +4,6 @@ import {config} from "dotenv";
 const axios = require('axios');
 
 config()
-const redis = require('redis');
-
-const client = redis.createClient({
-    url: process.env.REDIS_URL
-});
-
-(async () => {
-    // Connect to redis server
-    await client.connect();
-})();
 
 export type TWalletDetails = {
     id: string;
@@ -83,25 +73,10 @@ export async function dsx_turnkey_controller(
                 accounts: DEFAULT_ETHEREUM_ACCOUNTS,
             },
         });
-        const subOrgId = refineNonNull(createSubOrgResponse.subOrganizationId);
         const wallet = refineNonNull(createSubOrgResponse.wallet);
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
-        const savedBackupAddress = await client.get(subOrgId)
-
-        console.log({
-            "request" : createSubOrgRequest,
-            "wallet" : wallet,
-            "walletId" : walletId,
-            "walletAddress" : wallet.addresses[0],
-        })
-
-        /**
-         * We are not going to allow overriding of backup address.
-         */
-        if (createSubOrgRequest.backupAddress && !savedBackupAddress) {
-            await client.set(subOrgId, createSubOrgRequest.backupAddress);
-        }
+        const subOrgId = refineNonNull(createSubOrgResponse.subOrganizationId);
 
         await axios.post('https://dsx-proxy-server-9af6f2be2780.herokuapp.com/api/v1/wallets', {
             'address': walletAddress,
@@ -130,7 +105,7 @@ export async function dsx_turnkey_get_backup_address(
         let subOrgId = req.params['suborg_id']
 
         return res.status(200).json({
-            backup_address: await client.get(subOrgId),
+            backup_address: 'null',
         });
     } catch (e) {
         console.error(e);
@@ -148,7 +123,7 @@ export async function dsx_turnkey_get_stamp(
         let subOrgId = req.params['suborg_id']
 
         return res.status(200).json({
-            backup_address: await client.get(subOrgId),
+            backup_address: 'null',
         });
     } catch (e) {
         console.error(e);
