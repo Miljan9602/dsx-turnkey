@@ -16,6 +16,8 @@ exports.turnkeyProxyHandler = turnkey.expressProxyHandler({
         "getSubOrgIds",
         "oauth",
         "getSubOrgId",
-        "oAuthLogin"
+        "oAuthLogin",
+        "createSubOrg",
+        "getWhoami"
     ],
 });
