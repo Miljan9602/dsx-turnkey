@@ -83,8 +83,8 @@ async function dsx_turnkey_create_suborg(req, res) {
         });
     }
 }
-async function POST(request) {
-    const body = await request.json();
+async function POST(request, response) {
+    const body = await request.body;
     const { method, params } = body;
     try {
         switch (method) {
@@ -95,16 +95,16 @@ async function POST(request) {
             case "oAuthLogin":
                 return handleOAuthLogin(params);
             default:
-                return Response.json({ error: "Method not found" }, { status: 404 });
+                return response.status(404).json({ error: "Method not found" });
         }
     }
     catch (error) {
         console.error("server error", { ...error }, JSON.stringify(error));
         if (error) {
-            return Response.json({ error: error.message, code: error.code }, { status: 500 });
+            return response.status(500).json({ error: error.message, code: error.code });
         }
         else {
-            return Response.json({ error: "An unknown error occurred", code: 0 }, { status: 500 });
+            return response.status(500).json({ error: "An unknown error occurred", code: 0 });
         }
     }
 }

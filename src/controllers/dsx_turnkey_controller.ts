@@ -105,8 +105,11 @@ export async function dsx_turnkey_create_suborg(
     }
 }
 
-export async function POST(request: Request) {
-    const body: JSONRPCRequest<MethodName> = await request.json();
+export async function POST(
+    request: ExpressRequest,
+    response: ExpressResponse
+) {
+    const body: JSONRPCRequest<MethodName> = await request.body
     const { method, params } = body;
 
     try {
@@ -118,20 +121,14 @@ export async function POST(request: Request) {
             case "oAuthLogin":
                 return handleOAuthLogin(params as ParamsType<"oAuthLogin">);
             default:
-                return Response.json({ error: "Method not found" }, { status: 404 });
+                return response.status(404).json({ error: "Method not found" });
         }
     } catch (error: any) {
         console.error("server error", { ...error }, JSON.stringify(error));
         if (error) {
-            return Response.json(
-                { error: error.message, code: error.code },
-                { status: 500 }
-            );
+            return response.status(500).json({ error: error.message, code: error.code });
         } else {
-            return Response.json(
-                { error: "An unknown error occurred", code: 0 },
-                { status: 500 }
-            );
+            return response.status(500).json({ error: "An unknown error occurred", code: 0 });
         }
     }
 }
