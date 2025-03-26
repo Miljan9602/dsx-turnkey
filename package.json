@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Miljan9602/dsx-turnkey#readme",
   "dependencies": {
     "@turnkey/api-key-stamper": "^0.4.4",
+    "jsonwebtoken": "^9.0.2",
     "@turnkey/http": "^2.21.0",
     "@bugsnag/js": "^8.1.2",
     "@bugsnag/plugin-express": "^8.1.1",
@@ -38,6 +39,7 @@
     "viem": "^2.18.5"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "typescript": "^5.5.4"
