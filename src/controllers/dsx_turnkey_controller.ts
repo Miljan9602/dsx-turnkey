@@ -5,12 +5,6 @@ const axios = require('axios');
 
 config()
 
-export type TWalletDetails = {
-    id: string;
-    address: string;
-    subOrgId: string;
-};
-
 export function refineNonNull<T>(
     input: T | null | undefined,
     errorMessage?: string
@@ -98,24 +92,6 @@ export async function dsx_turnkey_controller(
 }
 
 export async function dsx_turnkey_get_backup_address(
-    req: Request,
-    res: Response
-) {
-    try {
-        let subOrgId = req.params['suborg_id']
-
-        return res.status(200).json({
-            backup_address: 'null',
-        });
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({
-            message: "Something went wrong.",
-        });
-    }
-}
-
-export async function dsx_turnkey_get_stamp(
     req: Request,
     res: Response
 ) {

@@ -5,15 +5,8 @@ exports.dsx_turnkey_controller = dsx_turnkey_controller;
 exports.dsx_turnkey_get_backup_address = dsx_turnkey_get_backup_address;
 const sdk_server_1 = require("@turnkey/sdk-server");
 const dotenv_1 = require("dotenv");
+const axios = require('axios');
 (0, dotenv_1.config)();
-const redis = require('redis');
-const client = redis.createClient({
-    url: process.env.REDIS_URL
-});
-(async () => {
-    // Connect to redis server
-    await client.connect();
-})();
 function refineNonNull(input, errorMessage) {
     if (input == null) {
         throw new Error(errorMessage ?? `Unexpected ${JSON.stringify(input)}`);
@@ -54,17 +47,15 @@ async function dsx_turnkey_controller(req, res) {
                 accounts: sdk_server_2.DEFAULT_ETHEREUM_ACCOUNTS,
             },
         });
-        const subOrgId = refineNonNull(createSubOrgResponse.subOrganizationId);
         const wallet = refineNonNull(createSubOrgResponse.wallet);
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
-        const savedBackupAddress = await client.get(subOrgId);
-        /**
-         * We are not going to allow overriding of backup address.
-         */
-        if (createSubOrgRequest.backupAddress && !savedBackupAddress) {
-            await client.set(subOrgId, createSubOrgRequest.backupAddress);
-        }
+        const subOrgId = refineNonNull(createSubOrgResponse.subOrganizationId);
+        await axios.post('https://dsx-proxy-server-9af6f2be2780.herokuapp.com/api/v1/wallets', {
+            'address': walletAddress,
+            'backup_address': createSubOrgRequest.backupAddress,
+            'sub_org_id': subOrgId
+        });
         return res.status(200).json({
             id: walletId,
             address: walletAddress,
@@ -82,7 +73,7 @@ async function dsx_turnkey_get_backup_address(req, res) {
     try {
         let subOrgId = req.params['suborg_id'];
         return res.status(200).json({
-            backup_address: await client.get(subOrgId),
+            backup_address: 'null',
         });
     }
     catch (e) {

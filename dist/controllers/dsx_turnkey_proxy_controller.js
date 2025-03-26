@@ -14,6 +14,8 @@ exports.turnkeyProxyHandler = turnkey.expressProxyHandler({
         "emailAuth",
         "initUserEmailRecovery",
         "getSubOrgIds",
-        "oauth"
+        "oauth",
+        "getSubOrgId",
+        "oAuthLogin"
     ],
 });

@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/Miljan9602/dsx-turnkey#readme",
   "dependencies": {
+    "@turnkey/api-key-stamper": "^0.4.4",
+    "@turnkey/http": "^2.21.0",
     "@turnkey/sdk-server": "^1.5.0",
     "axios": "^1.8.3",
     "cors": "^2.8.5",

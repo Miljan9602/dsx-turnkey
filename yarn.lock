@@ -98,6 +98,15 @@
     "@turnkey/encoding" "0.4.0"
     sha256-uint8array "^0.10.7"
 
+"@turnkey/api-key-stamper@0.4.4", "@turnkey/api-key-stamper@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@turnkey/api-key-stamper/-/api-key-stamper-0.4.4.tgz#b5a8224aa3c6bbdd1f7259ed2c1d047abe8a8d6f"
+  integrity sha512-KXvf2yV3OkSrZYEnHSgOwy2XS7Q4+XNwRkgRhDNsiYvgz8KNGLbqXg0/aAlkTIUT7NYODZ3iaGMml0DtyzGeDQ==
+  dependencies:
+    "@noble/curves" "^1.3.0"
+    "@turnkey/encoding" "0.4.0"
+    sha256-uint8array "^0.10.7"
+
 "@turnkey/encoding@0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@turnkey/encoding/-/encoding-0.4.0.tgz#9d06efe6447322bcc9eb4d51b48961054a3c102d"
@@ -109,6 +118,16 @@
   integrity sha512-pmodPfDg08AoIga+IsDbjmnIlaw8ZOeo3XURcBlyxFRfVtJEkpSng+Ux7sYXMEbQz4G5upC4ZprAYpE9AMaKgA==
   dependencies:
     "@turnkey/api-key-stamper" "0.4.3"
+    "@turnkey/encoding" "0.4.0"
+    "@turnkey/webauthn-stamper" "0.5.0"
+    cross-fetch "^3.1.5"
+
+"@turnkey/http@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@turnkey/http/-/http-2.21.0.tgz#508745e97f14b8c7745eeac39ceb308f684f5300"
+  integrity sha512-HC7iJa6Y8jIJsnf02uNCLA5NHptrj5ITerxQ014Npft94KpMe1zIxgZtHlL9eF+BGvwr13d0FV4ew2KZ+6JJpg==
+  dependencies:
+    "@turnkey/api-key-stamper" "0.4.4"
     "@turnkey/encoding" "0.4.0"
     "@turnkey/webauthn-stamper" "0.5.0"
     cross-fetch "^3.1.5"
