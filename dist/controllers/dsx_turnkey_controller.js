@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.turnkeyConfig = void 0;
 exports.refineNonNull = refineNonNull;
@@ -6,8 +9,9 @@ exports.dsx_turnkey_create_suborg = dsx_turnkey_create_suborg;
 exports.POST = POST;
 exports.dsx_turnkey_get_backup_address = dsx_turnkey_get_backup_address;
 const sdk_server_1 = require("@turnkey/sdk-server");
-const axios = require('axios');
+const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = require("jsonwebtoken");
+require("dotenv/config");
 exports.turnkeyConfig = {
     apiBaseUrl: process.env.NEXT_PUBLIC_TURNKEY_API_BASE_URL,
     apiPrivateKey: process.env.TURNKEY_API_PRIVATE_KEY,
@@ -60,10 +64,10 @@ async function dsx_turnkey_create_suborg(req, res) {
         const walletId = wallet.walletId;
         const walletAddress = wallet.addresses[0];
         const subOrgId = refineNonNull(createSubOrgResponse.subOrganizationId);
-        await axios.post('https://dsx-proxy-server-9af6f2be2780.herokuapp.com/api/v1/wallets', {
-            'address': walletAddress,
-            'backup_address': createSubOrgRequest.backupAddress,
-            'sub_org_id': subOrgId
+        await axios_1.default.post("https://dsx-proxy-server-9af6f2be2780.herokuapp.com/api/v1/wallets", {
+            address: walletAddress,
+            backup_address: createSubOrgRequest.backupAddress,
+            sub_org_id: subOrgId,
         });
         return res.status(200).json({
             id: walletId,
@@ -84,11 +88,11 @@ async function POST(request, response) {
     try {
         switch (method) {
             case "getSubOrgId":
-                return handleGetSubOrgId(params);
+                return handleGetSubOrgId(params, response);
             case "createSubOrg":
-                return handleCreateSubOrg(params);
+                return handleCreateSubOrg(params, response);
             case "oAuthLogin":
-                return handleOAuthLogin(params);
+                return handleOAuthLogin(params, response);
             default:
                 return response.status(404).json({ error: "Method not found" });
         }
@@ -96,14 +100,18 @@ async function POST(request, response) {
     catch (error) {
         console.error("server error", { ...error }, JSON.stringify(error));
         if (error) {
-            return response.status(500).json({ error: error.message, code: error.code });
+            return response
+                .status(500)
+                .json({ error: error.message, code: error.code });
         }
         else {
-            return response.status(500).json({ error: "An unknown error occurred", code: 0 });
+            return response
+                .status(500)
+                .json({ error: "An unknown error occurred", code: 0 });
         }
     }
 }
-async function handleCreateSubOrg(params) {
+async function handleCreateSubOrg(params, res) {
     const { email, phone, passkey, oauth } = params;
     const authenticators = passkey
         ? [
@@ -135,7 +143,7 @@ async function handleCreateSubOrg(params) {
     const subOrganizationName = `Sub Org - ${email || phone}`;
     const userName = email ? email.split("@")?.[0] || email : "";
     const result = await apiClient.createSubOrganization({
-        organizationId: '5a94e5eb-05a7-41b6-a415-69b82b4cb58e', //turnkeyConfig.defaultOrganizationId,
+        organizationId: exports.turnkeyConfig.defaultOrganizationId,
         subOrganizationName: subOrganizationName,
         rootUsers: [
             {
@@ -153,12 +161,12 @@ async function handleCreateSubOrg(params) {
             accounts: sdk_server_2.DEFAULT_ETHEREUM_ACCOUNTS,
         },
     });
-    return Response.json(result);
+    return res.json(result);
 }
-async function handleGetSubOrgId(params) {
+async function handleGetSubOrgId(params, res) {
     const { filterType, filterValue } = params;
     // let organizationId: string = turnkeyConfig.defaultOrganizationId;
-    let organizationId = '5a94e5eb-05a7-41b6-a415-69b82b4cb58e';
+    let organizationId = "5a94e5eb-05a7-41b6-a415-69b82b4cb58e";
     const { organizationIds } = await apiClient.getSubOrgIds({
         filterType,
         filterValue,
@@ -166,12 +174,12 @@ async function handleGetSubOrgId(params) {
     if (organizationIds.length > 0) {
         organizationId = organizationIds[0];
     }
-    return Response.json({ organizationId });
+    return res.json({ organizationId });
 }
-async function handleOAuthLogin(params) {
+async function handleOAuthLogin(params, res) {
     const { oidcToken, providerName, targetPublicKey, expirationSeconds } = params;
     // let organizationId: string = turnkeyConfig.defaultOrganizationId;
-    let organizationId = '5a94e5eb-05a7-41b6-a415-69b82b4cb58e';
+    let organizationId = "5a94e5eb-05a7-41b6-a415-69b82b4cb58e";
     const { organizationIds } = await apiClient.getSubOrgIds({
         filterType: "OIDC_TOKEN",
         filterValue: oidcToken,
@@ -181,7 +189,8 @@ async function handleOAuthLogin(params) {
     }
     else {
         const createSubOrgParams = { oauth: { oidcToken, providerName } };
-        const result = await handleCreateSubOrg(createSubOrgParams);
+        const result = await handleCreateSubOrg(createSubOrgParams, res);
+        // @ts-ignore
         const { subOrganizationId } = await result.json();
         organizationId = subOrganizationId;
     }
@@ -191,13 +200,13 @@ async function handleOAuthLogin(params) {
         targetPublicKey,
         expirationSeconds,
     });
-    return Response.json(oauthResponse);
+    return res.json(oauthResponse);
 }
 async function dsx_turnkey_get_backup_address(req, res) {
     try {
-        let subOrgId = req.params['suborg_id'];
+        let subOrgId = req.params["suborg_id"];
         return res.status(200).json({
-            backup_address: 'null',
+            backup_address: "null",
         });
     }
     catch (e) {
