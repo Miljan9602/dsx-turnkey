@@ -5,18 +5,14 @@ import { Email, JSONRPCRequest, MethodName, ParamsType } from "../lib/types";
 import { decode, JwtPayload } from "jsonwebtoken";
 
 export const turnkeyConfig = {
-    apiBaseUrl: process.env.EXPO_PUBLIC_TURNKEY_API_URL ?? "",
-    defaultOrganizationId: process.env.EXPO_PUBLIC_TURNKEY_ORGANIZATION_ID ?? "",
-    apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY ?? "",
-    apiPrivateKey: process.env.TURNKEY_API_PRIVATE_KEY ?? "",
-};
-
-const turnkey = new Turnkey({
     apiBaseUrl: process.env.NEXT_PUBLIC_TURNKEY_API_BASE_URL!,
     apiPrivateKey: process.env.TURNKEY_API_PRIVATE_KEY!,
     apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY!,
     defaultOrganizationId: process.env.NEXT_PUBLIC_ORGANIZATION_ID!,
-});
+};
+
+const turnkey = new Turnkey(turnkeyConfig);
+
 const apiClient = turnkey.apiClient();
 
 export function refineNonNull<T>(
