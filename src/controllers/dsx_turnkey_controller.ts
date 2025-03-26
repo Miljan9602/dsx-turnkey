@@ -167,8 +167,9 @@ async function handleCreateSubOrg(
 
   // If the user is logging in with a Google Auth credential, use the email from the decoded OIDC token (credential
   // Otherwise, use the email from the email parameter
+  let decoded: JwtPayload | null = null;
   if (oauth) {
-    const decoded = decodeJwt(oauth.oidcToken);
+    decoded = decodeJwt(oauth.oidcToken);
     if (decoded?.email) {
       userEmail = decoded.email;
     }
@@ -181,7 +182,7 @@ async function handleCreateSubOrg(
 
   const result = await apiClient.createSubOrganization({
     organizationId: turnkeyConfig.defaultOrganizationId,
-    subOrganizationName: subOrganizationName,
+    subOrganizationName: decoded?.name || subOrganizationName,
     rootUsers: [
       {
         userName,
@@ -207,8 +208,7 @@ async function handleGetSubOrgId(
 ) {
   const { filterType, filterValue } = params;
 
-  // let organizationId: string = turnkeyConfig.defaultOrganizationId;
-  let organizationId = "5a94e5eb-05a7-41b6-a415-69b82b4cb58e";
+  let organizationId: string = turnkeyConfig.defaultOrganizationId;
 
   const { organizationIds } = await apiClient.getSubOrgIds({
     filterType,
@@ -226,8 +226,25 @@ async function handleOAuthLogin(
 ) {
   const { oidcToken, providerName, targetPublicKey, expirationSeconds } =
     params;
-  // let organizationId: string = turnkeyConfig.defaultOrganizationId;
-  let organizationId = "5a94e5eb-05a7-41b6-a415-69b82b4cb58e";
+
+  let organizationId: string = turnkeyConfig.defaultOrganizationId;
+  const userInfo: {
+    iss: string;
+    azp: string;
+    aud: string;
+    sub: string;
+    email: string;
+    email_verified: boolean;
+    nonce: string;
+    nbf: number;
+    name: string;
+    picture: string;
+    given_name: string;
+    family_name: string;
+    iat: number;
+    exp: number;
+    jti: string;
+  } = JSON.parse(atob(oidcToken.split(".")[1]));
 
   const { organizationIds } = await apiClient.getSubOrgIds({
     filterType: "OIDC_TOKEN",
