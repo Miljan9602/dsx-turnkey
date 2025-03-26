@@ -135,7 +135,7 @@ async function handleCreateSubOrg(params) {
     const subOrganizationName = `Sub Org - ${email || phone}`;
     const userName = email ? email.split("@")?.[0] || email : "";
     const result = await apiClient.createSubOrganization({
-        organizationId: exports.turnkeyConfig.defaultOrganizationId,
+        organizationId: '5a94e5eb-05a7-41b6-a415-69b82b4cb58e', //turnkeyConfig.defaultOrganizationId,
         subOrganizationName: subOrganizationName,
         rootUsers: [
             {
@@ -157,7 +157,8 @@ async function handleCreateSubOrg(params) {
 }
 async function handleGetSubOrgId(params) {
     const { filterType, filterValue } = params;
-    let organizationId = exports.turnkeyConfig.defaultOrganizationId;
+    // let organizationId: string = turnkeyConfig.defaultOrganizationId;
+    let organizationId = '5a94e5eb-05a7-41b6-a415-69b82b4cb58e';
     const { organizationIds } = await apiClient.getSubOrgIds({
         filterType,
         filterValue,
@@ -169,7 +170,8 @@ async function handleGetSubOrgId(params) {
 }
 async function handleOAuthLogin(params) {
     const { oidcToken, providerName, targetPublicKey, expirationSeconds } = params;
-    let organizationId = exports.turnkeyConfig.defaultOrganizationId;
+    // let organizationId: string = turnkeyConfig.defaultOrganizationId;
+    let organizationId = '5a94e5eb-05a7-41b6-a415-69b82b4cb58e';
     const { organizationIds } = await apiClient.getSubOrgIds({
         filterType: "OIDC_TOKEN",
         filterValue: oidcToken,
