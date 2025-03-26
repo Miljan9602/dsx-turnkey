@@ -1,6 +1,12 @@
 import express from "express";
 import {dsx_turnkey_router} from "./routes";
 import cors from "cors";
+import {config} from "dotenv";
+
+config()
+
+var Bugsnag = require('@bugsnag/js')
+Bugsnag.start({ apiKey: '9ee2f1e3f90758708689f006322cf3c5' })
 
 const app = express();
 app.use(express.json());

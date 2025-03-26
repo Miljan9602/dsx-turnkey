@@ -4,9 +4,7 @@ exports.refineNonNull = refineNonNull;
 exports.dsx_turnkey_controller = dsx_turnkey_controller;
 exports.dsx_turnkey_get_backup_address = dsx_turnkey_get_backup_address;
 const sdk_server_1 = require("@turnkey/sdk-server");
-const dotenv_1 = require("dotenv");
 const axios = require('axios');
-(0, dotenv_1.config)();
 function refineNonNull(input, errorMessage) {
     if (input == null) {
         throw new Error(errorMessage ?? `Unexpected ${JSON.stringify(input)}`);

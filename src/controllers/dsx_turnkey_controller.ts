@@ -1,9 +1,6 @@
 import {Request, Response} from "express";
 import { Turnkey, TurnkeyApiTypes } from "@turnkey/sdk-server";
-import {config} from "dotenv";
 const axios = require('axios');
-
-config()
 
 export function refineNonNull<T>(
     input: T | null | undefined,
